@@ -1,0 +1,186 @@
+:root {
+  --ink: #111111;
+  --paper: #f4f1ea;
+  --yellow: #ffc61e;
+  --red: #e5352b;
+  --blue: #2b6ce5;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; } /* one screen, no scroll */
+body {
+  margin: 0;
+  font-family: "Space Mono", ui-monospace, monospace;
+  color: var(--ink);
+  background: #1a1a1a;
+}
+#root {
+  height: 100dvh; /* dvh: survives mobile browser chrome shrinking */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+/* left panel: pic fills its half, square edges crop off-screen so no seam */
+.hero {
+  align-self: stretch;
+  background: #1a1a1a url("/bg.png") center 35% / cover no-repeat;
+}
+.card {
+  width: 100%;
+  max-width: 460px;
+  margin: 40px auto;
+  padding: 26px;
+  background: var(--paper);
+  border: 5px solid var(--ink);
+  box-shadow: 10px 10px 0 var(--ink);
+}
+
+/* portrait phones + tablets: pic strip on top, card under it */
+@media (max-width: 860px) {
+  /* pic takes leftover row, card takes what it needs — together exactly one screen */
+  #root { grid-template-columns: 1fr; grid-template-rows: minmax(90px, 1fr) auto; align-items: stretch; }
+  .hero {
+    min-height: 0;
+    background-position: center 40%;
+  }
+  .card {
+    margin: 12px 12px 16px;
+    max-width: none;
+    padding: clamp(16px, 5vw, 26px);
+    border-width: 4px;
+    box-shadow: 7px 7px 0 var(--ink);
+  }
+}
+
+/* short screens: tighten the rhythm so the card still fits without scrolling */
+@media (max-height: 720px) {
+  input, select { padding: 9px 12px; margin-bottom: 12px; }
+  .tag { margin-bottom: 14px; }
+  .years { margin-bottom: 14px; }
+  .years label { padding: 8px 0; }
+  button { padding: 12px; }
+  .stats { margin-bottom: 14px; }
+  .stat { padding: 12px 4px; }
+  h1 { font-size: clamp(22px, 3vw, 30px); margin-bottom: 8px; }
+}
+
+/* landscape phones: no vertical room to stack — go back side-by-side */
+@media (max-height: 520px) and (min-aspect-ratio: 1/1) {
+  #root { grid-template-columns: 2fr 3fr; align-items: center; }
+  .hero { height: auto; align-self: stretch; }
+  .card { margin: 14px; max-width: 460px; }
+}
+h1 {
+  font-family: "Archivo Black", system-ui, sans-serif;
+  font-size: clamp(26px, 3.6vw, 38px);
+  line-height: 1;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+.tag {
+  display: inline-block;
+  margin-bottom: 22px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+}
+label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  /* 16px min or iOS Safari zooms the page on focus */
+  font: 700 16px "Space Mono", monospace;
+  color: var(--ink);
+  background: #fff;
+  border: 4px solid var(--ink);
+  border-radius: 0;
+  outline: none;
+  appearance: none;
+}
+select { background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0h10L5 6z'/%3E%3C/svg%3E") right 14px center / 12px no-repeat; }
+input:focus, select:focus { box-shadow: 6px 6px 0 var(--yellow); }
+
+/* year picker: radios as brutalist chips */
+.years { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(6px, 2vw, 12px); margin-bottom: 22px; }
+.years input { position: absolute; opacity: 0; pointer-events: none; }
+.years label {
+  margin: 0;
+  padding: clamp(10px, 3vw, 14px) 0;
+  text-align: center;
+  font-size: clamp(18px, 5vw, 22px);
+  font-family: "Archivo Black", sans-serif;
+  letter-spacing: 0;
+  background: #fff;
+  border: 4px solid var(--ink);
+  cursor: pointer;
+}
+.years label small { display: block; font: 700 10px "Space Mono", monospace; letter-spacing: .14em; }
+.years input:checked + label { background: var(--yellow); box-shadow: 5px 5px 0 var(--ink); }
+.years input:focus-visible + label { outline: 3px dashed var(--blue); outline-offset: 3px; }
+
+button {
+  width: 100%;
+  padding: 16px;
+  font: 700 15px "Space Mono", monospace;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border: 4px solid var(--ink);
+  cursor: pointer;
+}
+button:hover { background: var(--red); }
+button:active { transform: translate(3px, 3px); }
+button.ghost { color: var(--ink); background: var(--yellow); }
+button.ghost:hover { background: var(--red); color: var(--paper); }
+
+.err { min-height: 20px; margin: -8px 0 12px; font-size: 13px; font-weight: 700; color: var(--red); }
+
+.whoami { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; min-width: 0; }
+.whoami > div { min-width: 0; }
+.avatar {
+  flex: 0 0 auto;
+  width: clamp(48px, 14vw, 62px); height: clamp(48px, 14vw, 62px);
+  display: grid; place-items: center;
+  font: clamp(19px, 5vw, 24px) "Archivo Black", sans-serif;
+  background: var(--yellow);
+  border: 4px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.whoami h2 { margin: 0; font: clamp(19px, 5.5vw, 26px)/1.05 "Archivo Black", sans-serif; text-transform: uppercase; overflow-wrap: anywhere; }
+.whoami p { margin: 4px 0 0; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+/* the numbers — centered cell + centered digits, no jitter */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(6px, 2vw, 12px); margin-bottom: 20px; }
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: clamp(12px, 4vw, 18px) 4px;
+  text-align: center;
+  background: #fff;
+  border: 4px solid var(--ink);
+}
+.stat:nth-child(2) { background: var(--yellow); }
+.stat b {
+  font: clamp(17px, 5.6vw, 32px)/1 "Archivo Black", sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+.stat span { margin-top: 6px; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+
+.tag-out { background: var(--red); color: var(--paper); }
+.whoami + .tag { margin-bottom: 18px; }
