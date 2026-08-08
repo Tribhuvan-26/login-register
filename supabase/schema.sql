@@ -16,7 +16,10 @@ create table if not exists public.members (
   dept    text not null,
   year    text not null,
   branch  text not null,
-  section text not null default ''
+  section text not null default '',
+  -- department order from the source document, so the picker doesn't reorder
+  -- itself based on whatever the query happens to return first
+  dept_order smallint not null default 0
 );
 
 create table if not exists public.punches (
