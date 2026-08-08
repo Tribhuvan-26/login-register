@@ -1,2 +1,7 @@
 node_modules/
 dist/
+
+# Supabase keys — never commit these
+.env
+.env.local
+.env.*.local
