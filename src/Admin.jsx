@@ -69,7 +69,7 @@ function Shell({ title, children }) {
     <div className="card">
       <h1>{title}</h1>
       {children}
-      <p className="derived"><a href="#">← Back to punch</a></p>
+      <a className="back" href="#">← Back to punch</a>
     </div>
   )
 }
@@ -174,7 +174,7 @@ function Dashboard({ email }) {
         Export CSV
       </button>
       <button className="ghost" onClick={signOut}>Sign out</button>
-      <p className="derived"><a href="#">← Back to punch</a></p>
+      <a className="back" href="#">← Back to punch</a>
     </div>
   )
 }
