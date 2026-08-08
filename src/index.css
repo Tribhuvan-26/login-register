@@ -185,7 +185,22 @@ button.ghost:hover { background: var(--red); color: var(--paper); }
 .tag-out { background: var(--red); color: var(--paper); }
 .whoami + .tag { margin-bottom: 18px; }
 
-a { color: var(--ink); }
+/* Back link. Deliberately NOT .derived — that has a negative top margin for
+   sitting under a select, which drags this into the button above it. */
+.back {
+  display: block;
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: .65;
+}
+.back:hover { opacity: 1; text-decoration: underline; }
+.back:focus-visible { outline: 3px dashed var(--blue); outline-offset: 3px; opacity: 1; }
 
 /* ----------------------------------------------------------------- admin ----
    The punch card is deliberately one screen with no scroll. The admin log is
@@ -205,6 +220,8 @@ a { color: var(--ink); }
   background: #fff;
 }
 .log:empty { display: none; }
+/* status text sits inside the bordered box, so it needs padding not pull-up */
+.log .derived { margin: 0; padding: 14px; text-align: center; }
 .log-row {
   display: grid;
   grid-template-columns: 1fr auto;
