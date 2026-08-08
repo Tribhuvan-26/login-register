@@ -82,7 +82,9 @@ src/Admin.jsx         admin login, dashboard, CSV export
 src/supabase.js       client + every database call in one place
 src/roster.js         council roster — the source the seed is generated from
 src/punch.js          time/display helpers
+src/csv.js            CSV building + browser download
 src/punch.test.js     assert-based tests for punch.js
+src/csv.test.js       assert-based tests for csv.js
 src/index.css         brutalist theme + responsive layout
 scripts/gen-seed.mjs  roster.js -> supabase/seed.sql
 supabase/schema.sql   tables, RLS policies, punch(), admin view
@@ -93,10 +95,10 @@ vite.config.js        Vite + React plugin config
 ## Testing
 
 ```bash
-node src/punch.test.js
+npm test
 ```
 
-Covers the time helpers. Note the punch toggle itself is now enforced in SQL — the unique index and the `punch()` function — and is **not** covered by these tests.
+Covers the time helpers and CSV export (quoting, localised timestamps, empty ranges). Note the punch toggle itself is enforced in SQL — the unique index and the `punch()` function — and is **not** covered by these tests.
 
 ## Tech stack
 
