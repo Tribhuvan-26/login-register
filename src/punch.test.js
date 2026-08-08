@@ -1,26 +1,17 @@
 import assert from 'node:assert/strict'
-import { punch, hoursBetween, keyOf } from './punch.js'
+import { hoursBetween, clock } from './punch.js'
 
-const who = { name: 'Ada Lovelace', dept: 'Technical', year: '3' }
-let store = {}
-let r
+// whole and part hours
+assert.equal(hoursBetween('2026-07-28T09:00:00Z', '2026-07-28T17:30:00Z'), '8.50')
+assert.equal(hoursBetween('2026-07-28T09:00:00Z', '2026-07-28T09:00:00Z'), '0.00')
 
-// 1st time name entered -> punch in
-;({ store, record: r } = punch(store, who, '2026-07-28T09:00:00Z'))
-assert.equal(r.out, null, 'first entry punches in')
-assert.equal(r.in, '2026-07-28T09:00:00Z')
+// across midnight — the DB stores instants, so a shift may span two dates
+assert.equal(hoursBetween('2026-07-28T23:00:00Z', '2026-07-29T01:15:00Z'), '2.25')
 
-// same name again -> punch out
-;({ store, record: r } = punch(store, { ...who, name: '  ADA   lovelace ' }, '2026-07-28T17:30:00Z'))
-assert.equal(r.out, '2026-07-28T17:30:00Z', 'second entry punches out (case/space insensitive)')
-assert.equal(hoursBetween(r.in, r.out), '8.50')
+// an open shift has no out time; the card shows a placeholder rather than NaN
+assert.equal(clock(null), '—:—')
+assert.equal(clock(undefined), '—:—')
+assert.match(clock('2026-07-28T09:00:00Z'), /\d/)
 
-// third time -> fresh shift, punched in again
-;({ store, record: r } = punch(store, who, '2026-07-29T09:15:00Z'))
-assert.equal(r.out, null, 'after a closed shift, next entry punches in again')
-
-// different name gets its own record
-;({ store } = punch(store, { ...who, name: 'Grace Hopper' }, '2026-07-29T10:00:00Z'))
-assert.deepEqual(Object.keys(store), [keyOf('Ada Lovelace'), keyOf('Grace Hopper')])
-
-console.log('ok — punch in/out toggle works')
+console.log('ok — time helpers')
+console.log('note: the punch toggle is enforced in SQL and is not covered here')

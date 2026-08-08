@@ -1,16 +1,7 @@
-// Attendance store shape: { [nameKey]: { name, dept, year, in: iso, out: iso|null } }
-
-export const keyOf = name => name.trim().toLowerCase().replace(/\s+/g, ' ')
-
-/** Toggle: open shift -> punch out. No shift, or shift already closed -> punch in. */
-export function punch(store, who, nowIso) {
-  const k = keyOf(who.name)
-  const rec = store[k]
-  const next = rec && !rec.out
-    ? { ...rec, out: nowIso }
-    : { ...who, in: nowIso, out: null }
-  return { store: { ...store, [k]: next }, record: next }
-}
+// Display helpers. The punch in/out toggle itself now lives in the database
+// (public.punch in supabase/schema.sql) so that the time is stamped server-side
+// and one member can't hold two open shifts. Keeping a second copy of that
+// logic here would only let the two drift apart.
 
 export const hoursBetween = (a, b) =>
   ((new Date(b) - new Date(a)) / 3600000).toFixed(2)
