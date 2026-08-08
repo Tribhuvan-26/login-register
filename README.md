@@ -29,21 +29,27 @@ npm run preview   # preview the production build locally
 
 ## How it works
 
-1. Enter your **name**, **department**, and **year**.
-2. Press **Punch →**.
-3. The app looks up your name (case- and whitespace-insensitive):
+1. Pick your **department** from the seven chips.
+2. Pick your **name** from the dropdown — it lists only that department's members.
+3. Press **Punch →**. Year, branch, section, and roll number come from the roster, so there's nothing else to type.
+4. The app looks up your name (case- and whitespace-insensitive):
    - No open shift → you're **punched in**, timestamp recorded.
    - Open shift found → it's closed, you're **punched out**, and your hours are shown.
    - Punching again after that starts a brand-new shift.
 
-**Departments:** Technical · Graphic Design · Creatives · Content Writing · Promotions & Sponsorships · Operations and Finance
-**Years:** 2nd · 3rd · 4th
+**Departments:** Technical · Operations & Finance · Graphic Design · Promotions & Sponsorship · Photography & Media · Content · Creatives
+
+Members come from `src/roster.js`, transcribed from the official council department list. Add or remove people there — the dropdown, the year, and the branch/section all follow from it.
 
 All records live under the `cie-attendance` key in `localStorage` as a map keyed by normalized name, e.g.:
 
 ```json
 {
-  "jane doe": { "name": "Jane Doe", "dept": "Technical", "year": "3", "in": "2026-07-29T09:00:00.000Z", "out": null }
+  "gannoji vedik": {
+    "name": "GANNOJI VEDIK", "dept": "Technical", "year": "3",
+    "branch": "CSD", "section": "B", "roll": "24R21A6771",
+    "in": "2026-07-29T09:00:00.000Z", "out": null
+  }
 }
 ```
 
@@ -54,6 +60,7 @@ index.html          Vite entry point
 public/bg.png        mascot / left-panel artwork
 src/main.jsx          mounts the hero panel + app
 src/App.jsx           form UI and the punch result card
+src/roster.js         official council roster, by department
 src/punch.js          pure punch/toggle logic + time helpers
 src/punch.test.js     assert-based tests for punch.js
 src/index.css         brutalist theme + responsive layout
