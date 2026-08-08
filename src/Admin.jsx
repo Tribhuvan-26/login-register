@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase, signIn, signOut, isAdmin, loadLog } from './supabase.js'
 import { clock } from './punch.js'
+import { toCsv, download } from './csv.js'
 
 const day = iso => new Date(iso).toLocaleDateString([], { day: '2-digit', month: 'short' })
 
@@ -8,26 +9,6 @@ const day = iso => new Date(iso).toLocaleDateString([], { day: '2-digit', month:
 function isoDay(d) {
   const p = n => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
-}
-
-function toCsv(rows) {
-  const head = ['Name', 'Roll', 'Department', 'Year', 'Branch', 'Section', 'In', 'Out', 'Hours']
-  // quote everything: names contain commas, and Excel splits on them
-  const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`
-  const body = rows.map(r => [
-    r.name, r.roll, r.dept, r.year, r.branch, r.section,
-    r.punched_in, r.punched_out ?? '', r.hours ?? '',
-  ].map(esc).join(','))
-  return [head.map(esc).join(','), ...body].join('\r\n')
-}
-
-function download(name, text) {
-  const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }))
-  const a = document.createElement('a')
-  a.href = url
-  a.download = name
-  a.click()
-  URL.revokeObjectURL(url)
 }
 
 export default function Admin() {
@@ -174,7 +155,6 @@ function Dashboard({ email }) {
         Export CSV
       </button>
       <button className="ghost" onClick={signOut}>Sign out</button>
-      <a className="back" href="#">← Back to punch</a>
     </div>
   )
 }
